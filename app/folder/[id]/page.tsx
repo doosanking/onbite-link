@@ -12,7 +12,7 @@ export default async function FolderPage({ params }: PageProps<"/folder/[id]">) 
 
   return (
     <AppShell>
-      <h1 className="mb-6 text-xl font-bold">{folder.name}</h1>
+      <h1 className="mb-6 text-[30px] font-bold leading-[1.2] text-[var(--text)]">{folder.name}</h1>
       <LinkGrid links={folderLinks} folders={folders} />
     </AppShell>
   );

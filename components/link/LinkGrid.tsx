@@ -10,7 +10,7 @@ export default function LinkGrid({
 }) {
   if (links.length === 0) {
     return (
-      <p className="py-20 text-center text-sm text-zinc-500">
+      <p className="py-20 text-center text-sm text-[var(--text-sub)]">
         등록된 링크가 없습니다.
       </p>
     );

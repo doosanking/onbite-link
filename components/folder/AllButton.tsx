@@ -9,14 +9,11 @@ export default function AllButton({ count }: { count: number }) {
   return (
     <Link
       href="/"
-      className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
-        active
-          ? "bg-zinc-100 dark:bg-zinc-800"
-          : "hover:bg-zinc-100 dark:hover:bg-zinc-900"
-      }`}
+      aria-current={active ? "page" : undefined}
+      className="nav-item flex w-full items-center justify-between rounded-[6px] px-3 py-2 text-sm text-[var(--text)]"
     >
-      <span>ALL</span>
-      <span className="text-xs font-normal text-zinc-500">{count}</span>
+      <span>📚 전체</span>
+      <span className="text-xs font-normal text-[var(--text-sub)]">{count}</span>
     </Link>
   );
 }

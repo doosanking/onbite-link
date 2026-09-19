@@ -8,7 +8,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Header />
       <div className="flex flex-1">
         <Sidebar folders={folders} totalCount={links.length} />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="min-w-0 flex-1 px-6 pt-10 pb-16">
+          <div className="mx-auto max-w-[960px]">{children}</div>
+        </main>
       </div>
     </div>
   );

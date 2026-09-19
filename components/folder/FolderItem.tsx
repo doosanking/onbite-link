@@ -11,14 +11,11 @@ export default function FolderItem({ folder }: { folder: Folder }) {
   return (
     <Link
       href={href}
-      className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
-        active
-          ? "bg-zinc-100 dark:bg-zinc-800"
-          : "hover:bg-zinc-100 dark:hover:bg-zinc-900"
-      }`}
+      aria-current={active ? "page" : undefined}
+      className="nav-item flex w-full items-center justify-between rounded-[6px] px-3 py-2 text-sm text-[var(--text)]"
     >
       <span className="truncate">📁 {folder.name}</span>
-      <span className="text-xs text-zinc-500">{folder.count}</span>
+      <span className="text-xs text-[var(--text-sub)]">{folder.count}</span>
     </Link>
   );
 }

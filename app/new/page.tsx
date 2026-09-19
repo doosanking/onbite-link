@@ -6,7 +6,7 @@ export default function NewLinkPage() {
   return (
     <AppShell>
       <div className="mx-auto max-w-xl">
-        <h1 className="mb-6 text-xl font-bold">새 링크 추가</h1>
+        <h1 className="mb-6 text-[30px] font-bold leading-[1.2] text-[var(--text)]">새 링크 추가</h1>
         <LinkForm folders={folders} />
       </div>
     </AppShell>
