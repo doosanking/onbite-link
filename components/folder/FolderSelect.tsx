@@ -1,12 +1,18 @@
 import type { Folder } from "@/lib/mock-data";
 
-export default function FolderSelect({ folders }: { folders: Folder[] }) {
+export default function FolderSelect({
+  folders,
+  defaultValue = "",
+}: {
+  folders: Folder[];
+  defaultValue?: string;
+}) {
   return (
     <label className="flex flex-col gap-2 text-sm font-bold text-[var(--text)]">
       폴더
       <select
         name="folderId"
-        defaultValue=""
+        defaultValue={defaultValue}
         required
         className="field rounded-[10px] border border-[var(--border)] bg-[var(--card)] px-3.5 py-3 text-base font-normal text-[var(--text)]"
       >

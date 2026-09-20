@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import EditLinkModal from "@/components/link/EditLinkModal";
 import DeleteLinkModal from "@/components/link/DeleteLinkModal";
 import { useLinks } from "@/components/link/LinkProvider";
 import type { LinkItem } from "@/lib/mock-data";
@@ -14,6 +15,7 @@ export default function LinkCard({
 }) {
   const { removeLink } = useLinks();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const host = new URL(link.url).hostname.replace(/^www\./, "");
 
   return (
@@ -54,6 +56,27 @@ export default function LinkCard({
     </a>
     <button
       type="button"
+      aria-label={`${link.title} 링크 수정`}
+      onClick={() => setEditOpen(true)}
+      className="icon-btn absolute top-3 right-12 flex size-8 items-center justify-center rounded-[8px] bg-[var(--card)] text-[var(--text-sub)] opacity-0 shadow-[0_1px_6px_rgba(0,0,0,0.15)] group-hover:opacity-100 focus-visible:opacity-100"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+      </svg>
+    </button>
+    <button
+      type="button"
       aria-label={`${link.title} 링크 삭제`}
       onClick={() => setConfirmOpen(true)}
       className="icon-btn absolute top-3 right-3 flex size-8 items-center justify-center rounded-[8px] bg-[var(--card)] text-[var(--text-sub)] opacity-0 shadow-[0_1px_6px_rgba(0,0,0,0.15)] group-hover:opacity-100 focus-visible:opacity-100"
@@ -75,6 +98,7 @@ export default function LinkCard({
         <path d="M10 11v6M14 11v6" />
       </svg>
     </button>
+    <EditLinkModal link={link} open={editOpen} onClose={() => setEditOpen(false)} />
     <DeleteLinkModal
       link={link}
       open={confirmOpen}
