@@ -12,10 +12,10 @@ export default function FolderItem({ folder }: { folder: Folder }) {
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className="nav-item flex w-full items-center justify-between rounded-[6px] px-3 py-2 text-sm text-[var(--text)]"
+      className="nav-item flex w-full items-center justify-between rounded-[12px] px-3.5 py-2.5 text-[15px] text-[var(--text)]"
     >
       <span className="truncate">📁 {folder.name}</span>
-      <span className="text-xs text-[var(--text-sub)]">{folder.count}</span>
+      <span className="text-[13px] text-[var(--text-sub)]">{folder.count}</span>
     </Link>
   );
 }

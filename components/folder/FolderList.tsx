@@ -1,7 +1,11 @@
-import FolderItem from "@/components/folder/FolderItem";
-import type { Folder } from "@/lib/mock-data";
+"use client";
 
-export default function FolderList({ folders }: { folders: Folder[] }) {
+import FolderItem from "@/components/folder/FolderItem";
+import { useFolders } from "@/components/folder/FolderProvider";
+
+export default function FolderList() {
+  const { folders } = useFolders();
+
   return (
     <nav aria-label="폴더">
       <h2 className="mb-2 px-3 text-xs font-medium text-[var(--text-sub)]">폴더</h2>
