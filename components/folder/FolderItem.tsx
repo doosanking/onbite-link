@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import DeleteFolderModal from "@/components/folder/DeleteFolderModal";
 import EditFolderModal from "@/components/folder/EditFolderModal";
 import { useFolders } from "@/components/folder/FolderProvider";
+import { useLinks } from "@/components/link/LinkProvider";
 import type { Folder } from "@/lib/mock-data";
 
 export default function FolderItem({ folder }: { folder: Folder }) {
@@ -13,6 +14,8 @@ export default function FolderItem({ folder }: { folder: Folder }) {
   const active = usePathname() === href;
   const router = useRouter();
   const { removeFolder } = useFolders();
+  const { links } = useLinks();
+  const count = links.filter((l) => l.folderId === folder.id).length;
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
@@ -25,7 +28,7 @@ export default function FolderItem({ folder }: { folder: Folder }) {
       >
         <span className="truncate">📁 {folder.name}</span>
         <span className="text-[13px] text-[var(--text-sub)] group-hover:invisible group-focus-within:invisible">
-          {folder.count}
+          {count}
         </span>
       </Link>
       <button

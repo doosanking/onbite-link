@@ -1,13 +1,14 @@
-import LinkCard from "@/components/link/LinkCard";
-import type { Folder, LinkItem } from "@/lib/mock-data";
+"use client";
 
-export default function LinkGrid({
-  links,
-  folders,
-}: {
-  links: LinkItem[];
-  folders: Folder[];
-}) {
+import { useFolders } from "@/components/folder/FolderProvider";
+import LinkCard from "@/components/link/LinkCard";
+import { useLinks } from "@/components/link/LinkProvider";
+
+export default function LinkGrid({ folderId }: { folderId?: string }) {
+  const { folders } = useFolders();
+  const { links: allLinks } = useLinks();
+  const links = folderId ? allLinks.filter((l) => l.folderId === folderId) : allLinks;
+
   if (links.length === 0) {
     return (
       <p className="py-20 text-center text-sm text-[var(--text-sub)]">
