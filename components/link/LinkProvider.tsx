@@ -6,6 +6,7 @@ import { links as initialLinks, type LinkItem } from "@/lib/mock-data";
 type LinkContextValue = {
   links: LinkItem[];
   addLink: (link: Omit<LinkItem, "id" | "createdAt">) => void;
+  removeLink: (id: string) => void;
 };
 
 const LinkContext = createContext<LinkContextValue | null>(null);
@@ -20,7 +21,11 @@ export function LinkProvider({ children }: { children: React.ReactNode }) {
     ]);
   };
 
-  return <LinkContext value={{ links, addLink }}>{children}</LinkContext>;
+  const removeLink = (id: string) => {
+    setLinks((prev) => prev.filter((link) => link.id !== id));
+  };
+
+  return <LinkContext value={{ links, addLink, removeLink }}>{children}</LinkContext>;
 }
 
 export function useLinks() {
