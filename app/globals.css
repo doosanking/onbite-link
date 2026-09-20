@@ -64,6 +64,24 @@ body {
   transform: scale(0.97);
 }
 
+.btn-danger {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.btn-danger:hover {
+  opacity: 0.9;
+}
+.btn-danger:active {
+  transform: scale(0.97);
+}
+
+.icon-btn {
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.icon-btn:hover {
+  background: var(--card);
+  color: var(--error);
+}
+
 .field {
   transition: border-color 0.2s ease;
 }
