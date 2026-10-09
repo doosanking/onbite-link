@@ -103,9 +103,9 @@ export default function LinkCard({
       link={link}
       open={confirmOpen}
       onClose={() => setConfirmOpen(false)}
-      onConfirm={() => {
+      onConfirm={async () => {
         setConfirmOpen(false);
-        removeLink(link.id);
+        await removeLink(link.id);
       }}
     />
     </div>

@@ -51,3 +51,9 @@ export async function updateLink(
   if (error) throw new Error(`링크를 수정하지 못했습니다: ${error.message}`);
   return toLinkItem(data);
 }
+
+export async function deleteLink(id: string): Promise<void> {
+  const { error } = await supabase.from("link").delete().eq("id", Number(id));
+
+  if (error) throw new Error(`링크를 삭제하지 못했습니다: ${error.message}`);
+}

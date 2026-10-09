@@ -1,13 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { createLink, updateLink as updateLinkAction } from "@/app/actions/link";
+import { createLink, deleteLink, updateLink as updateLinkAction } from "@/app/actions/link";
 import type { LinkItem } from "@/lib/mock-data";
 
 type LinkContextValue = {
   links: LinkItem[];
   addLink: (link: Omit<LinkItem, "id" | "createdAt">) => Promise<void>;
-  removeLink: (id: string) => void;
+  removeLink: (id: string) => Promise<void>;
   updateLink: (id: string, values: Pick<LinkItem, "folderId" | "title" | "description">) => Promise<void>;
 };
 
@@ -27,7 +27,8 @@ export function LinkProvider({
     setLinks((prev) => [created, ...prev]);
   };
 
-  const removeLink = (id: string) => {
+  const removeLink = async (id: string) => {
+    await deleteLink(id);
     setLinks((prev) => prev.filter((link) => link.id !== id));
   };
 
