@@ -1,13 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { createFolder, updateFolderName } from "@/app/actions/folder";
+import { createFolder, deleteFolder, updateFolderName } from "@/app/actions/folder";
 import type { Folder } from "@/lib/mock-data";
 
 type FolderContextValue = {
   folders: Folder[];
   addFolder: (name: string) => Promise<void>;
-  removeFolder: (id: string) => void;
+  removeFolder: (id: string) => Promise<void>;
   renameFolder: (id: string, name: string) => Promise<void>;
 };
 
@@ -27,7 +27,8 @@ export function FolderProvider({
     setFolders((prev) => [...prev, folder]);
   };
 
-  const removeFolder = (id: string) => {
+  const removeFolder = async (id: string) => {
+    await deleteFolder(id);
     setFolders((prev) => prev.filter((folder) => folder.id !== id));
   };
 

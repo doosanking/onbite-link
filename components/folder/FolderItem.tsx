@@ -84,9 +84,9 @@ export default function FolderItem({ folder }: { folder: Folder }) {
         folder={folder}
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={() => {
+        onConfirm={async () => {
           setConfirmOpen(false);
-          removeFolder(folder.id);
+          await removeFolder(folder.id);
           if (active) router.push("/");
         }}
       />

@@ -31,3 +31,9 @@ export async function updateFolderName(id: string, name: string): Promise<string
   if (error) throw new Error(`폴더 이름을 수정하지 못했습니다: ${error.message}`);
   return data.name;
 }
+
+export async function deleteFolder(id: string): Promise<void> {
+  const { error } = await supabase.from("folder").delete().eq("id", Number(id));
+
+  if (error) throw new Error(`폴더를 삭제하지 못했습니다: ${error.message}`);
+}
