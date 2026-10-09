@@ -16,3 +16,18 @@ export async function createFolder(name: string): Promise<Folder> {
   if (error) throw new Error(`폴더를 추가하지 못했습니다: ${error.message}`);
   return { id: String(data.id), name: data.name, count: 0 };
 }
+
+export async function updateFolderName(id: string, name: string): Promise<string> {
+  const trimmed = name.trim();
+  if (!trimmed || trimmed.length > 20) throw new Error("폴더 이름이 올바르지 않습니다.");
+
+  const { data, error } = await supabase
+    .from("folder")
+    .update({ name: trimmed })
+    .eq("id", Number(id))
+    .select("name")
+    .single();
+
+  if (error) throw new Error(`폴더 이름을 수정하지 못했습니다: ${error.message}`);
+  return data.name;
+}
