@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import LinkGrid from "@/components/link/LinkGrid";
-import { folders } from "@/lib/mock-data";
+import { getFolders } from "@/lib/folder-data";
 
 export default async function FolderPage({ params }: PageProps<"/folder/[id]">) {
   const { id } = await params;
+  const folders = await getFolders();
   const folder = folders.find((f) => f.id === id);
   if (!folder) notFound();
 

@@ -1,22 +1,30 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { folders as initialFolders, type Folder } from "@/lib/mock-data";
+import { createFolder } from "@/app/actions/folder";
+import type { Folder } from "@/lib/mock-data";
 
 type FolderContextValue = {
   folders: Folder[];
-  addFolder: (name: string) => void;
+  addFolder: (name: string) => Promise<void>;
   removeFolder: (id: string) => void;
   renameFolder: (id: string, name: string) => void;
 };
 
 const FolderContext = createContext<FolderContextValue | null>(null);
 
-export function FolderProvider({ children }: { children: React.ReactNode }) {
+export function FolderProvider({
+  initialFolders,
+  children,
+}: {
+  initialFolders: Folder[];
+  children: React.ReactNode;
+}) {
   const [folders, setFolders] = useState<Folder[]>(initialFolders);
 
-  const addFolder = (name: string) => {
-    setFolders((prev) => [...prev, { id: crypto.randomUUID(), name, count: 0 }]);
+  const addFolder = async (name: string) => {
+    const folder = await createFolder(name);
+    setFolders((prev) => [...prev, folder]);
   };
 
   const removeFolder = (id: string) => {

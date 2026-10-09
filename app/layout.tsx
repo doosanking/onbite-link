@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { FolderProvider } from "@/components/folder/FolderProvider";
 import { LinkProvider } from "@/components/link/LinkProvider";
+import { getFolders } from "@/lib/folder-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,14 +20,16 @@ export const metadata: Metadata = {
   description: "북마크 관리 서비스",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const folders = await getFolders();
+
   return (
     <html
       lang="ko"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <FolderProvider>
+        <FolderProvider initialFolders={folders}>
           <LinkProvider>{children}</LinkProvider>
         </FolderProvider>
       </body>

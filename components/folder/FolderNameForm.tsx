@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function FolderNameForm({
   initialName = "",
@@ -8,20 +8,30 @@ export default function FolderNameForm({
   onClose,
 }: {
   initialName?: string;
-  onSubmit: (name: string) => void;
+  onSubmit: (name: string) => void | Promise<void>;
   onClose: () => void;
 }) {
   const [name, setName] = useState(initialName);
+  const [pending, setPending] = useState(false);
+  // state 갱신 전 연속 클릭까지 막기 위해 ref로 즉시 잠근다.
+  const submittingRef = useRef(false);
 
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         const trimmed = name.trim();
-        if (!trimmed) return;
-        onSubmit(trimmed);
-        onClose();
+        if (!trimmed || submittingRef.current) return;
+        submittingRef.current = true;
+        setPending(true);
+        try {
+          await onSubmit(trimmed);
+          onClose();
+        } finally {
+          submittingRef.current = false;
+          setPending(false);
+        }
       }}
     >
       <label className="flex flex-col gap-2 text-sm font-bold text-[var(--text)]">
@@ -47,10 +57,10 @@ export default function FolderNameForm({
         </button>
         <button
           type="submit"
-          disabled={!name.trim()}
+          disabled={!name.trim() || pending}
           className="btn-primary rounded-[12px] bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
         >
-          저장
+          {pending ? "저장 중..." : "저장"}
         </button>
       </div>
     </form>
