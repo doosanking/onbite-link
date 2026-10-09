@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { FolderProvider } from "@/components/folder/FolderProvider";
 import { LinkProvider } from "@/components/link/LinkProvider";
 import { getFolders } from "@/lib/folder-data";
+import { getLinks } from "@/lib/link-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const folders = await getFolders();
+  const [folders, links] = await Promise.all([getFolders(), getLinks()]);
 
   return (
     <html
@@ -30,7 +31,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <FolderProvider initialFolders={folders}>
-          <LinkProvider>{children}</LinkProvider>
+          <LinkProvider initialLinks={links}>{children}</LinkProvider>
         </FolderProvider>
       </body>
     </html>

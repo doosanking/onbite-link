@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import FolderSelect from "@/components/folder/FolderSelect";
 import { useFolders } from "@/components/folder/FolderProvider";
@@ -13,17 +13,20 @@ export default function LinkForm() {
   const { addLink } = useLinks();
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  // state 갱신 전 연속 클릭까지 막기 위해 ref로 즉시 잠근다.
+  const submittingRef = useRef(false);
 
   return (
     <form
       className="flex flex-col gap-[14px] rounded-[16px] bg-[var(--card)] p-5 shadow-[0_1px_6px_rgba(0,0,0,0.06)]"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (pending) return;
+        if (submittingRef.current) return;
         const form = new FormData(e.currentTarget);
         const inputUrl = String(form.get("url")).trim();
         const folderId = String(form.get("folderId"));
 
+        submittingRef.current = true;
         setPending(true);
         let og: OgData = {};
         try {
@@ -34,13 +37,19 @@ export default function LinkForm() {
         }
 
         const url = og.url || inputUrl;
-        addLink({
-          title: og.title || new URL(url).hostname.replace(/^www\./, ""),
-          description: og.description ?? "",
-          url,
-          thumbnail: og.image || undefined,
-          folderId,
-        });
+        try {
+          await addLink({
+            title: og.title || new URL(url).hostname.replace(/^www\./, ""),
+            description: og.description ?? "",
+            url,
+            thumbnail: og.image || undefined,
+            folderId,
+          });
+        } catch (err) {
+          submittingRef.current = false;
+          setPending(false);
+          throw err;
+        }
         router.push(`/folder/${folderId}`);
       }}
     >

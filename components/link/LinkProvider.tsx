@@ -1,25 +1,30 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { links as initialLinks, type LinkItem } from "@/lib/mock-data";
+import { createLink } from "@/app/actions/link";
+import type { LinkItem } from "@/lib/mock-data";
 
 type LinkContextValue = {
   links: LinkItem[];
-  addLink: (link: Omit<LinkItem, "id" | "createdAt">) => void;
+  addLink: (link: Omit<LinkItem, "id" | "createdAt">) => Promise<void>;
   removeLink: (id: string) => void;
   updateLink: (id: string, values: Partial<Pick<LinkItem, "folderId" | "title" | "description">>) => void;
 };
 
 const LinkContext = createContext<LinkContextValue | null>(null);
 
-export function LinkProvider({ children }: { children: React.ReactNode }) {
+export function LinkProvider({
+  initialLinks,
+  children,
+}: {
+  initialLinks: LinkItem[];
+  children: React.ReactNode;
+}) {
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
 
-  const addLink = (link: Omit<LinkItem, "id" | "createdAt">) => {
-    setLinks((prev) => [
-      { ...link, id: crypto.randomUUID(), createdAt: new Date().toISOString().slice(0, 10) },
-      ...prev,
-    ]);
+  const addLink = async (link: Omit<LinkItem, "id" | "createdAt">) => {
+    const created = await createLink(link);
+    setLinks((prev) => [created, ...prev]);
   };
 
   const removeLink = (id: string) => {
