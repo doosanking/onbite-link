@@ -1,14 +1,14 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { createLink } from "@/app/actions/link";
+import { createLink, updateLink as updateLinkAction } from "@/app/actions/link";
 import type { LinkItem } from "@/lib/mock-data";
 
 type LinkContextValue = {
   links: LinkItem[];
   addLink: (link: Omit<LinkItem, "id" | "createdAt">) => Promise<void>;
   removeLink: (id: string) => void;
-  updateLink: (id: string, values: Partial<Pick<LinkItem, "folderId" | "title" | "description">>) => void;
+  updateLink: (id: string, values: Pick<LinkItem, "folderId" | "title" | "description">) => Promise<void>;
 };
 
 const LinkContext = createContext<LinkContextValue | null>(null);
@@ -31,11 +31,12 @@ export function LinkProvider({
     setLinks((prev) => prev.filter((link) => link.id !== id));
   };
 
-  const updateLink = (
+  const updateLink = async (
     id: string,
-    values: Partial<Pick<LinkItem, "folderId" | "title" | "description">>,
+    values: Pick<LinkItem, "folderId" | "title" | "description">,
   ) => {
-    setLinks((prev) => prev.map((link) => (link.id === id ? { ...link, ...values } : link)));
+    const updated = await updateLinkAction(id, values);
+    setLinks((prev) => prev.map((link) => (link.id === id ? updated : link)));
   };
 
   return <LinkContext value={{ links, addLink, removeLink, updateLink }}>{children}</LinkContext>;

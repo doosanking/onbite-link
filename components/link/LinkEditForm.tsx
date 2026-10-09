@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import FolderSelect from "@/components/folder/FolderSelect";
 import { useFolders } from "@/components/folder/FolderProvider";
 import type { LinkItem } from "@/lib/mock-data";
@@ -16,23 +16,33 @@ export default function LinkEditForm({
   onClose,
 }: {
   link: LinkItem;
-  onSubmit: (values: LinkEditValues) => void;
+  onSubmit: (values: LinkEditValues) => void | Promise<void>;
   onClose: () => void;
 }) {
   const { folders } = useFolders();
   const [title, setTitle] = useState(link.title);
   const [description, setDescription] = useState(link.description);
+  const [pending, setPending] = useState(false);
+  // state 갱신 전 연속 클릭까지 막기 위해 ref로 즉시 잠근다.
+  const submittingRef = useRef(false);
 
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         const trimmed = title.trim();
-        if (!trimmed) return;
+        if (!trimmed || submittingRef.current) return;
         const folderId = String(new FormData(e.currentTarget).get("folderId"));
-        onSubmit({ folderId, title: trimmed, description: description.trim() });
-        onClose();
+        submittingRef.current = true;
+        setPending(true);
+        try {
+          await onSubmit({ folderId, title: trimmed, description: description.trim() });
+          onClose();
+        } finally {
+          submittingRef.current = false;
+          setPending(false);
+        }
       }}
     >
       <FolderSelect folders={folders} defaultValue={link.folderId} />
@@ -68,10 +78,10 @@ export default function LinkEditForm({
         </button>
         <button
           type="submit"
-          disabled={!title.trim()}
+          disabled={!title.trim() || pending}
           className="btn-primary rounded-[12px] bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
         >
-          저장
+          {pending ? "저장 중..." : "저장"}
         </button>
       </div>
     </form>

@@ -27,3 +27,27 @@ export async function createLink(
   if (error) throw new Error(`링크를 추가하지 못했습니다: ${error.message}`);
   return toLinkItem(data);
 }
+
+export async function updateLink(
+  id: string,
+  values: Pick<LinkItem, "folderId" | "title" | "description">,
+): Promise<LinkItem> {
+  const title = values.title.trim();
+  if (!title) throw new Error("제목을 입력하세요.");
+  const folderId = Number(values.folderId);
+  if (!Number.isInteger(folderId)) throw new Error("폴더를 선택하세요.");
+
+  const { data, error } = await supabase
+    .from("link")
+    .update({
+      title,
+      description: values.description.trim() || null,
+      folder_id: folderId,
+    })
+    .eq("id", Number(id))
+    .select(LINK_COLUMNS)
+    .single();
+
+  if (error) throw new Error(`링크를 수정하지 못했습니다: ${error.message}`);
+  return toLinkItem(data);
+}
