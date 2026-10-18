@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { FolderProvider } from "@/components/folder/FolderProvider";
 import { LinkProvider } from "@/components/link/LinkProvider";
+import { ToastProvider } from "@/components/ui/Toast";
 import { getFolders } from "@/lib/folder-data";
 import { getLinks } from "@/lib/link-data";
 import "./globals.css";
@@ -30,9 +31,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <FolderProvider initialFolders={folders}>
-          <LinkProvider initialLinks={links}>{children}</LinkProvider>
-        </FolderProvider>
+        <ToastProvider>
+          <FolderProvider initialFolders={folders}>
+            <LinkProvider initialLinks={links}>{children}</LinkProvider>
+          </FolderProvider>
+        </ToastProvider>
       </body>
     </html>
   );
