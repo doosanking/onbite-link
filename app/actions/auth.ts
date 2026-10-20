@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 type AuthResult = { error?: string };
@@ -59,4 +60,13 @@ export async function signIn(email: string, password: string): Promise<AuthResul
     return { error: (error.code && SIGNIN_ERROR_MESSAGES[error.code]) || "로그인에 실패했습니다. 다시 시도해주세요." };
   }
   return {};
+}
+
+// 세션 쿠키를 지우고 로그인 페이지로 이동한다.
+export async function signOut(): Promise<AuthResult> {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) return { error: "로그아웃에 실패했습니다. 다시 시도해주세요." };
+  redirect("/login");
 }

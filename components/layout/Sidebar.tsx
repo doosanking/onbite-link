@@ -1,3 +1,4 @@
+import LogoutButton from "@/components/auth/LogoutButton";
 import AllButton from "@/components/folder/AllButton";
 import FolderList from "@/components/folder/FolderList";
 
@@ -6,6 +7,7 @@ export default function Sidebar() {
     <aside className="hidden w-60 shrink-0 flex-col gap-7 p-5 md:flex">
       <AllButton />
       <FolderList />
+      <LogoutButton />
     </aside>
   );
 }
